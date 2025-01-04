@@ -15,6 +15,7 @@ export default function MainScreen() {
   const selectedCity = React.useMemo(() => city
     ? capitalize(city)
     : cities[0], [city]);
+  const offersInSelectedCity = React.useMemo(() => offers.filter(offer => offer.city.name === selectedCity), [selectedCity]);
 
   return (
     <main className="page__main page__main--index">
@@ -40,7 +41,7 @@ export default function MainScreen() {
       {
         offers.length === 0
           ? <MainScreenEmpty selectedCity={selectedCity}/>
-          : <OffersList selectedCity={selectedCity} offers={offers}/>
+          : <OffersList selectedCity={selectedCity} offers={offersInSelectedCity}/>
       }
     </main>
   );

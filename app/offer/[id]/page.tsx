@@ -15,9 +15,8 @@ const MAX_NUMBER_OF_IMAGES = 6;
 export default function Offer() {
   const params = useParams<OfferParams>();
   const id = parseInt(params.id!, 10);
-  console.log(id);
 
-  const offer = offers[0];
+  const offer = offers.find(x => x.id === id);
   const isFavorite = false;
 
   if (!offer) {

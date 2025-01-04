@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import UserNavigation from '@/components/user-navigation';
 import { AppRoute } from '@/lib/const';
-// import '@/public/css/main.css';
+import '@/public/css/main.css';
 
 type HeaderProps = {
   isWithUserNavigation?: boolean;

@@ -42,7 +42,7 @@ const eslintConfig = [
               position: 'before',
             },
             {
-              pattern: '@src/**',
+              pattern: '{@app/**,@components/**,@lib/**,@public/**}',
               group: 'parent',
               position: 'before',
             },

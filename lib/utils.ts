@@ -7,3 +7,7 @@ export const convertZodErrors = (error: ZodError): StringMap => {
     return acc;
   }, {});
 };
+
+export const capitalize = (value: string): string => {
+  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+};

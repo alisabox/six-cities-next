@@ -52,3 +52,7 @@ export type ReviewsType = {
   rating: number;
   user: UserType;
 };
+
+export type FavoriteCitiesType = {
+  [key: CityType['name']]: OffersType[];
+};

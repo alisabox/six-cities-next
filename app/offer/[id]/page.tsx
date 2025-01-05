@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import Loading from '@/app/loading';
 import Header from '@/components/header';
+import { BookmarkIcon } from '@/components/icons/bookmark';
 import { MAX_RATING, RoomTypes } from '@/lib/const';
 import { offers } from '@/lib/data';
 
@@ -17,7 +18,6 @@ export default function Offer() {
   const id = parseInt(params.id!, 10);
 
   const offer = offers.find(x => x.id === id);
-  const isFavorite = false;
 
   if (!offer) {
     return (
@@ -25,7 +25,20 @@ export default function Offer() {
     );
   }
 
-  const { images, isPremium, title, rating, type, bedrooms, maxAdults, price, goods, host, description } = offer;
+  const {
+    images,
+    isPremium,
+    title,
+    rating,
+    type,
+    bedrooms,
+    maxAdults,
+    price,
+    goods,
+    host,
+    description,
+    isFavorite
+  } = offer;
   const { avatarUrl, isPro, name } = host;
 
   return (
@@ -58,13 +71,12 @@ export default function Offer() {
               <div className="property__name-wrapper">
                 <h1 className="property__name">{title}</h1>
                 <button
-                  className={`property__bookmark-button ${isFavorite ? 'property__bookmark-button--active' : ''} button`}
+                  className={`property__bookmark-button 
+                    ${isFavorite ? 'property__bookmark-button--active' : ''} button`}
                   type="button"
                   onClick={() => console.log('clicked')}
                 >
-                  <svg className="property__bookmark-icon" width="31" height="33">
-                    <use xlinkHref="#icon-bookmark"></use>
-                  </svg>
+                  <BookmarkIcon className="property__bookmark-icon" />
                   <span className="visually-hidden">To bookmarks</span>
                 </button>
               </div>
@@ -104,7 +116,13 @@ export default function Offer() {
                 <h2 className="property__host-title">Meet the host</h2>
                 <div className="property__host-user user">
                   <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
-                    <img className="property__avatar user__avatar" src={`../${avatarUrl}`} width="74" height="74" alt="Host avatar" />
+                    <img
+                      className="property__avatar user__avatar"
+                      src={`../${avatarUrl}`}
+                      width="74"
+                      height="74"
+                      alt="Host avatar"
+                    />
                   </div>
                   <span className="property__user-name">
                     {name}
@@ -145,7 +163,8 @@ export default function Offer() {
             <div className="near-places__list places__list">
               {/*{*/}
               {/*  nearbyOffers*/}
-              {/*    ? nearbyOffers.map((nearbyOffer) => <Card key={nearbyOffer.id} offer={nearbyOffer} isPropertyScreen />)*/}
+              {/*    ? nearbyOffers.map((nearbyOffer) =>
+                <Card key={nearbyOffer.id} offer={nearbyOffer} isPropertyScreen />)*/}
               {/*    : ''*/}
               {/*}*/}
             </div>

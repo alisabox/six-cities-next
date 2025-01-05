@@ -11,11 +11,11 @@ export const offers: OffersType[] = [{
     },
     name: 'Amsterdam',
   },
-  description: 'A beautifully maintained 2-bedroom, 1-bathroom apartment featuring an open living area with natural light, ' +
-    'a modern kitchen with stainless steel appliances, spacious bedrooms with built-in wardrobes, and a sleek bathroom. ' +
-    'Enjoy in-unit laundry, air conditioning, and a private balcony. The pet-friendly building offers secure entry, a gym, ' +
-    'a pool, and reserved parking. Located in a quiet neighborhood near public transportation, shopping, parks, and schools, ' +
-    'it provides the perfect mix of convenience and comfort. Schedule a tour today!',
+  description: 'A beautifully maintained 2-bedroom, 1-bathroom apartment featuring an open living area with natural ' +
+    'light, a modern kitchen with stainless steel appliances, spacious bedrooms with built-in wardrobes, and a sleek ' +
+    'bathroom. Enjoy in-unit laundry, air conditioning, and a private balcony. The pet-friendly building offers ' +
+    'secure entry, a gym, a pool, and reserved parking. Located in a quiet neighborhood near public transportation, ' +
+    'shopping, parks, and schools, it provides the perfect mix of convenience and comfort. Schedule a tour today!',
   goods: ['washing machine', 'refrigerator'],
   host: {
     avatarUrl: '/img/avatar-angelina.jpg',
@@ -337,7 +337,8 @@ export const offers: OffersType[] = [{
     location: { latitude: 48.8582, longitude: 2.2945, zoom: 12 },
     name: 'Paris',
   },
-  description: 'Stylish one-bedroom apartment located near the Eiffel Tower, featuring contemporary decor and modern amenities.',
+  description: 'Stylish one-bedroom apartment located near the Eiffel Tower, ' +
+    'featuring contemporary decor and modern amenities.',
   goods: ['WiFi', 'Kitchen', 'Air conditioning'],
   host: {
     avatarUrl: '/img/avatar-max.jpg',
@@ -390,7 +391,8 @@ export const offers: OffersType[] = [{
     location: { latitude: 50.9371, longitude: 6.9607, zoom: 12 },
     name: 'Cologne',
   },
-  description: 'Bright and cozy private room in the heart of Cologne, ideal for short stays with easy access to local attractions.',
+  description: 'Bright and cozy private room in the heart of Cologne, ' +
+    'ideal for short stays with easy access to local attractions.',
   goods: ['WiFi', 'Kitchen', 'Coffee machine'],
   host: {
     avatarUrl: '/img/avatar-max.jpg',
@@ -416,7 +418,8 @@ export const offers: OffersType[] = [{
     location: { latitude: 50.9384, longitude: 6.9600, zoom: 12 },
     name: 'Cologne',
   },
-  description: 'Charming two-bedroom apartment with a spacious living room, located near the Rhine River and great restaurants.',
+  description: 'Charming two-bedroom apartment with a spacious living room, ' +
+    'located near the Rhine River and great restaurants.',
   goods: ['WiFi', 'Parking', 'Balcony'],
   host: {
     avatarUrl: '/img/avatar-angelina.jpg',
@@ -443,7 +446,8 @@ export const offers: OffersType[] = [{
     location: { latitude: 53.5515, longitude: 9.9938, zoom: 12 },
     name: 'Hamburg',
   },
-  description: 'Modern two-bedroom apartment with a stylish living room and views of the Elbe River, perfect for city explorers.',
+  description: 'Modern two-bedroom apartment with a stylish living room ' +
+    'and views of the Elbe River, perfect for city explorers.',
   goods: ['WiFi', 'TV', 'Coffee machine'],
   host: {
     avatarUrl: '/img/avatar-max.jpg',

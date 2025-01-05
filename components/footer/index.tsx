@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { AppRoute } from '@/lib/const';
-// import '@/public/css/main.css';
+import '@/public/css/main.css';
 
 export default function Footer() {
   return (

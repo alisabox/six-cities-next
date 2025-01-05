@@ -1,21 +1,13 @@
-'use client';
-
-import React from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import MainScreenEmpty from '@/components/main-empty';
 import OffersList from '@/components/offers-list';
 import { AppRoute, cities } from '@/lib/const';
 import { offers } from '@/lib/data';
-import { capitalize } from '@/lib/utils';
 import '@/public/css/main.css';
 
-export default function MainScreen() {
-  const city = useSearchParams().get('city');
-  const selectedCity = React.useMemo(() => city
-    ? capitalize(city)
-    : cities[0], [city]);
-  const offersInSelectedCity = React.useMemo(() => offers.filter(offer => offer.city.name === selectedCity), [selectedCity]);
+
+export default function MainScreen({ selectedCity }: { selectedCity: string }) {
+  const offersInSelectedCity = offers.filter(offer => offer.city.name === selectedCity);
 
   return (
     <main className="page__main page__main--index">
@@ -27,7 +19,8 @@ export default function MainScreen() {
               cities.map((menuCity) => (
                 <li key={menuCity} className="locations__item">
                   <Link
-                    className={`locations__item-link tabs__item ${menuCity === selectedCity ? 'tabs__item--active' : ''}`}
+                    className={`locations__item-link tabs__item 
+                      ${menuCity === selectedCity ? 'tabs__item--active' : ''}`}
                     href={AppRoute.ROOT + `?city=${menuCity.toLowerCase()}`}
                   >
                     <span>{menuCity}</span>

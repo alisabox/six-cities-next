@@ -61,11 +61,26 @@ function SortVariants({ onSortModeChange, selectedCity }: SortVariantsProps) {
           <use xlinkHref="#icon-arrow-select"></use>
         </svg>
       </span>
-      <ul onClick={handleSelectSort} className={`places__options places__options--custom ${openList ? 'places__options--opened' : ''}`}>
-        <li className={`places__option ${selectedSortMode.isPopular ? ACTIVE_SORT_CLASS : ''}`} tabIndex={0}>{SortMode.POPULAR}</li>
-        <li className={`places__option ${selectedSortMode.isPriceUp ? ACTIVE_SORT_CLASS : ''}`} tabIndex={0}>{SortMode.PRICE_UP}</li>
-        <li className={`places__option ${selectedSortMode.isPriceDown ? ACTIVE_SORT_CLASS : ''}`} tabIndex={0}>{SortMode.PRICE_DOWN}</li>
-        <li className={`places__option ${selectedSortMode.isTopRated ? ACTIVE_SORT_CLASS : ''}`} tabIndex={0}>{SortMode.TOP_RATED}</li>
+      <ul
+        onClick={handleSelectSort}
+        className={`places__options places__options--custom ${openList ? 'places__options--opened' : ''}`}
+      >
+        <li
+          className={`places__option ${selectedSortMode.isPopular ? ACTIVE_SORT_CLASS : ''}`}
+          tabIndex={0}
+        >{SortMode.POPULAR}</li>
+        <li
+          className={`places__option ${selectedSortMode.isPriceUp ? ACTIVE_SORT_CLASS : ''}`}
+          tabIndex={0}
+        >{SortMode.PRICE_UP}</li>
+        <li
+          className={`places__option ${selectedSortMode.isPriceDown ? ACTIVE_SORT_CLASS : ''}`}
+          tabIndex={0}
+        >{SortMode.PRICE_DOWN}</li>
+        <li
+          className={`places__option ${selectedSortMode.isTopRated ? ACTIVE_SORT_CLASS : ''}`}
+          tabIndex={0}
+        >{SortMode.TOP_RATED}</li>
       </ul>
     </form>
   );

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Card from '@/components/card';
 import SortVariants from '@/components/sort-variants';
@@ -16,6 +18,7 @@ export default function OffersList({ selectedCity, offers }: OffersProps) {
   }, []);
 
   const [selectedPoint, setSelectedPoint] = React.useState<number | undefined>(undefined);
+  console.log('selectedPoint', selectedPoint);
 
   const onListItemHover = (id?: number) => {
     setSelectedPoint(id);
@@ -40,7 +43,9 @@ export default function OffersList({ selectedCity, offers }: OffersProps) {
       <div className="cities__places-container container">
         <section className="cities__places places">
           <h2 className="visually-hidden">Places</h2>
-          <b className="places__found">{offers.length === 1 ? '1 place' : `${offers.length} places`} to stay in {selectedCity}</b>
+          <b className="places__found">
+            {offers.length === 1 ? '1 place' : `${offers.length} places`} to stay in {selectedCity}
+          </b>
           <SortVariants onSortModeChange={onSortModeChange} selectedCity={selectedCity} />
           <div className="cities__places-list places__list tabs__content">
             {sortedOffers.slice().map((offer: OffersType) =>

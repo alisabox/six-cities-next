@@ -26,7 +26,8 @@ const eslintConfig = [
       '@stylistic/object-curly-spacing': ['error', 'always'],
       '@stylistic/no-mixed-spaces-and-tabs': 'error',
       '@stylistic/no-trailing-spaces': 'error',
-      '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }]
+      '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
+      '@stylistic/max-len': ['error', { 'code': 120 }]
     }
   },
   {

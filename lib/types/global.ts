@@ -56,3 +56,5 @@ export type ReviewsType = {
 export type FavoriteCitiesType = {
   [key: CityType['name']]: OffersType[];
 };
+
+export type SearchParams = { [key: string]: string | string[] | undefined };

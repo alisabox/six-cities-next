@@ -6,8 +6,10 @@ import Loading from '@/app/loading';
 import Card from '@/components/card';
 import Header from '@/components/header';
 import { BookmarkIcon } from '@/components/icons/bookmark';
+import ReviewsList from '@/components/review-list';
 import { MAX_RATING, RoomTypes } from '@/lib/const';
 import { offers } from '@/lib/data';
+import { ReviewsType } from '@/lib/types/global';
 
 const Map = dynamic(() => import('@/components/map'), { ssr: false });
 
@@ -23,6 +25,7 @@ export default function Offer() {
 
   const offer = offers.find(x => x.id === id);
   const nearbyOffers = offers.filter(x => x.city.name === offer?.city.name && x.id !== id);
+  const reviews: ReviewsType[] = [];
 
   if (!offer) {
     return (
@@ -147,11 +150,11 @@ export default function Offer() {
                   </p>
                 </div>
               </div>
-              {/*{*/}
-              {/*  reviews*/}
-              {/*    ? <ReviewsList reviews={reviews} />*/}
-              {/*    : ''*/}
-              {/*}*/}
+              {
+                reviews
+                  ? <ReviewsList reviews={reviews} />
+                  : ''
+              }
             </div>
           </div>
           <section className="property__map map">

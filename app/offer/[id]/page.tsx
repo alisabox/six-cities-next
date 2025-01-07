@@ -1,11 +1,15 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 import Loading from '@/app/loading';
+import Card from '@/components/card';
 import Header from '@/components/header';
 import { BookmarkIcon } from '@/components/icons/bookmark';
 import { MAX_RATING, RoomTypes } from '@/lib/const';
 import { offers } from '@/lib/data';
+
+const Map = dynamic(() => import('@/components/map'), { ssr: false });
 
 type OfferParams = {
   id: string;
@@ -18,6 +22,7 @@ export default function Offer() {
   const id = parseInt(params.id!, 10);
 
   const offer = offers.find(x => x.id === id);
+  const nearbyOffers = offers.filter(x => x.city.name === offer?.city.name && x.id !== id);
 
   if (!offer) {
     return (
@@ -150,23 +155,23 @@ export default function Offer() {
             </div>
           </div>
           <section className="property__map map">
-            {/*  {*/}
-            {/*    nearbyOffers*/}
-            {/*      ? <Map offers={[offer, ...nearbyOffers]} selectedPoint={id} />*/}
-            {/*      : ''*/}
-            {/*  }*/}
+            {
+              nearbyOffers
+                ? <Map offers={[offer, ...nearbyOffers]} selectedPoint={id} />
+                : ''
+            }
           </section>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
-              {/*{*/}
-              {/*  nearbyOffers*/}
-              {/*    ? nearbyOffers.map((nearbyOffer) =>
-                <Card key={nearbyOffer.id} offer={nearbyOffer} isPropertyScreen />)*/}
-              {/*    : ''*/}
-              {/*}*/}
+              {
+                nearbyOffers
+                  ? nearbyOffers.map((nearbyOffer) =>
+                    <Card key={nearbyOffer.id} offer={nearbyOffer} isPropertyScreen />)
+                  : ''
+              }
             </div>
           </section>
         </div>

@@ -1,10 +1,13 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Card from '@/components/card';
 import SortVariants from '@/components/sort-variants';
 import { sortOffers } from '@/lib/const';
 import { OffersType } from '@/lib/types/global';
+
+const Map = dynamic(() => import('@/components/map'), { ssr: false });
 
 type OffersProps = {
   selectedCity: string;
@@ -18,7 +21,6 @@ export default function OffersList({ selectedCity, offers }: OffersProps) {
   }, []);
 
   const [selectedPoint, setSelectedPoint] = React.useState<number | undefined>(undefined);
-  console.log('selectedPoint', selectedPoint);
 
   const onListItemHover = (id?: number) => {
     setSelectedPoint(id);
@@ -55,7 +57,7 @@ export default function OffersList({ selectedCity, offers }: OffersProps) {
         </section>
         <div className="cities__right-section">
           <section className="cities__map map">
-            {/*<Map offers={offers} selectedPoint={selectedPoint} />*/}
+            <Map offers={offers} selectedPoint={selectedPoint} />
           </section>
         </div>
       </div>

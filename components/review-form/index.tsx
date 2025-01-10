@@ -1,150 +1,70 @@
-import React from 'react';
-import { useState, ChangeEvent, SyntheticEvent, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import { StarIcon } from '@/components/icons/star';
-import { PostReviewType } from '@/lib/types/global';
+'use client';
 
-type OfferParams = {
-  id: string;
-};
+import React from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+// import { useParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import StarInput from '@/components/star-input';
+import { reviewSubmitAction } from '@/lib/actions/review';
+import { reviewSchema } from '@/lib/schemas/review';
+import { PostReviewType } from '@/lib/types/global';
 
 const MIN_REVIEW_LENGTH = 50;
 const MAX_REVIEW_LENGTH = 300;
 
 export default function ReviewForm() {
-  const params = useParams<OfferParams>();
-  const id = parseInt(params.id!, 10);
+  // const id = useParams()?.id as string;
 
-  const isPostSuccessfull = true;
-  const isPostError = false;
-
-  const [review, setReview] = useState<PostReviewType>({
-    comment: '',
-    rating: 0,
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid },
+    reset,
+    setValue,
+    watch
+  } = useForm<PostReviewType>({
+    resolver: zodResolver(reviewSchema),
+    defaultValues: {
+      rating: undefined,
+      comment: '',
+    },
+    mode: 'onChange'
   });
 
-  const [disabledForm, setDisabledForm] = useState(false);
+  const handleRatingChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue('rating', Number(e.target.value));
+  }, [setValue]);
 
-  const { comment, rating } = review;
-  const isSubmitDisabled = comment.length < MIN_REVIEW_LENGTH || rating === 0;
-
-  const handleStarClick = (evt: ChangeEvent<HTMLInputElement>) => {
-    setReview({
-      comment,
-      rating: parseInt(evt.target.value, 10),
-    });
-  };
-
-  const handleTextareaChange = (evt: ChangeEvent<HTMLTextAreaElement>) => {
-    setReview({
-      comment: evt.target.value,
-      rating,
-    });
-  };
-
-  const handleSubmit = (evt: SyntheticEvent) => {
-    evt.preventDefault();
-    setDisabledForm(true);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    dispatch(postReview(id, review));
-  };
-
-  useEffect(() => {
-    if (isPostSuccessfull) {
-      setReview({
-        comment: '',
-        rating: 0,
-      });
-      setDisabledForm(false);
+  const onSubmit = async (data: PostReviewType) => {
+    const { successMsg } = await reviewSubmitAction(data);
+    if (successMsg) {
+      toast.success(successMsg);
+      reset();
     }
-    if (isPostError) {
-      setDisabledForm(false);
-    }
-  }, [isPostError, isPostSuccessfull]);
+  };
 
   return (
-    <form className="reviews__form form" action="#" method="post" onSubmit={handleSubmit}>
+    <form className="reviews__form form" onSubmit={handleSubmit(onSubmit)}>
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
-      <div className="reviews__rating-form form__rating" >
-        <input
-          className="form__rating-input visually-hidden"
-          name="rating"
-          value="5"
-          id="5-stars"
-          type="radio"
-          onChange={handleStarClick}
-          checked={review.rating === 5}
-          disabled={disabledForm}
+      <div className="reviews__rating-form form__rating">
+        <StarInput
+          value={watch().rating}
+          onChange={handleRatingChange}
         />
-        <label htmlFor="5-stars" className="reviews__rating-label form__rating-label" title="perfect">
-          <StarIcon className="form__star-image" width="37" height="33"/>
-        </label>
-
-        <input
-          className="form__rating-input visually-hidden"
-          name="rating"
-          value="4"
-          id="4-stars"
-          type="radio"
-          onChange={handleStarClick}
-          checked={review.rating === 4}
-          disabled={disabledForm}
-        />
-        <label htmlFor="4-stars" className="reviews__rating-label form__rating-label" title="good">
-          <StarIcon className="form__star-image" width="37" height="33"/>
-        </label>
-
-        <input
-          className="form__rating-input visually-hidden"
-          name="rating"
-          value="3"
-          id="3-stars"
-          type="radio"
-          onChange={handleStarClick}
-          checked={review.rating === 3}
-          disabled={disabledForm}
-        />
-        <label htmlFor="3-stars" className="reviews__rating-label form__rating-label" title="not bad">
-          <StarIcon className="form__star-image" width="37" height="33"/>
-        </label>
-
-        <input
-          className="form__rating-input visually-hidden"
-          name="rating"
-          value="2"
-          id="2-stars"
-          type="radio"
-          onChange={handleStarClick}
-          checked={review.rating === 2}
-          disabled={disabledForm}
-        />
-        <label htmlFor="2-stars" className="reviews__rating-label form__rating-label" title="badly">
-          <StarIcon className="form__star-image" width="37" height="33"/>
-        </label>
-
-        <input
-          className="form__rating-input visually-hidden"
-          name="rating"
-          value="1"
-          id="1-star"
-          type="radio"
-          onChange={handleStarClick}
-          checked={review.rating === 1}
-          disabled={disabledForm}
-        />
-        <label htmlFor="1-star" className="reviews__rating-label form__rating-label" title="terribly">
-          <StarIcon className="form__star-image" width="37" height="33"/>
-        </label>
       </div>
-      <textarea className="reviews__textarea form__textarea" id="review" name="review"
+      <textarea
+        className="reviews__textarea form__textarea"
+        id="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
-        onChange={handleTextareaChange}
-        value={comment}
+        {...register('comment', {
+          minLength: {
+            value: MIN_REVIEW_LENGTH,
+            message: 'Describe your stay with at least 50 characters.'
+          }
+        })}
         maxLength={MAX_REVIEW_LENGTH}
-        disabled={disabledForm}
-      >
-      </textarea>
+      ></textarea>
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating
@@ -154,7 +74,7 @@ export default function ReviewForm() {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={isSubmitDisabled || disabledForm}
+          disabled={!isValid}
         >Submit</button>
       </div>
     </form>

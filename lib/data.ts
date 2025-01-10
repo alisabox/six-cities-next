@@ -1,5 +1,5 @@
 import { RoomTypes } from '@/lib/const';
-import { OffersType } from '@/lib/types/global';
+import { OffersType, ReviewsType } from '@/lib/types/global';
 
 export const offers: OffersType[] = [{
   bedrooms: 1,
@@ -547,4 +547,138 @@ export const offers: OffersType[] = [{
   type: RoomTypes.ROOM,
 },
 ];
+
+export const reviews: ReviewsType[] = [
+  {
+    comment: 'The apartment was clean and spacious. ' +
+      'The location was perfect for sightseeing, with many attractions within walking distance.',
+    date: '2024-12-01',
+    id: 1,
+    rating: 5,
+    user: {
+      avatarUrl: '/img/avatar-max.jpg',
+      id: 101,
+      isPro: false,
+      name: 'John Doe'
+    }
+  },
+  {
+    comment: 'The host was very friendly and helpful. ' +
+      'The kitchen was well-equipped, and the WiFi was fast. Highly recommend!',
+    date: '2024-11-28',
+    id: 2,
+    rating: 4,
+    user: {
+      avatarUrl: '/img/avatar-angelina.jpg',
+      id: 102,
+      isPro: true,
+      name: 'Sophia Lane'
+    }
+  },
+  {
+    comment: 'Great value for the price. ' +
+      'However, the bedroom was a bit noisy due to the nearby street.',
+    date: '2024-11-20',
+    id: 3,
+    rating: 3,
+    user: {
+      avatarUrl: '/img/avatar-max.jpg',
+      id: 103,
+      isPro: false,
+      name: 'Michael Brown'
+    }
+  },
+  {
+    comment: 'We had a lovely stay! The apartment is exactly as described, ' +
+      'and the view from the balcony was stunning.',
+    date: '2024-11-15',
+    id: 4,
+    rating: 5,
+    user: {
+      avatarUrl: '/img/avatar-angelina.jpg',
+      id: 104,
+      isPro: true,
+      name: 'Emily Green'
+    }
+  },
+  {
+    comment: 'The location was good, but the cleanliness could ' +
+      'have been better. The bathroom needs some renovation.',
+    date: '2024-11-10',
+    id: 5,
+    rating: 2,
+    user: {
+      avatarUrl: '/img/avatar-max.jpg',
+      id: 105,
+      isPro: false,
+      name: 'David Wilson'
+    }
+  },
+  {
+    comment: 'Fantastic stay! The host went above and ' +
+      'beyond to ensure we were comfortable. Will definitely return.',
+    date: '2024-10-30',
+    id: 6,
+    rating: 5,
+    user: {
+      avatarUrl: '/img/avatar-angelina.jpg',
+      id: 106,
+      isPro: true,
+      name: 'Olivia Taylor'
+    }
+  },
+  {
+    comment: 'The apartment was okay, but the check-in process was a bit confusing. ' +
+      'Clearer instructions would be appreciated.',
+    date: '2024-10-25',
+    id: 7,
+    rating: 3,
+    user: {
+      avatarUrl: '/img/avatar-max.jpg',
+      id: 107,
+      isPro: false,
+      name: 'Ethan Martinez'
+    }
+  },
+  {
+    comment: 'The place was charming and well-decorated. ' +
+      'Close to many restaurants and cafes. Perfect for a weekend getaway.',
+    date: '2024-10-20',
+    id: 8,
+    rating: 4,
+    user: {
+      avatarUrl: '/img/avatar-angelina.jpg',
+      id: 108,
+      isPro: true,
+      name: 'Isabella Johnson'
+    }
+  },
+  {
+    comment: 'Not worth the money. The furniture was old, ' +
+      'and the photos didn’t match reality. Disappointed with the stay.',
+    date: '2024-10-15',
+    id: 9,
+    rating: 1,
+    user: {
+      avatarUrl: '/img/avatar-max.jpg',
+      id: 109,
+      isPro: false,
+      name: 'Liam Garcia'
+    }
+  },
+  {
+    comment: 'Amazing experience! The apartment was luxurious, ' +
+      'and the host provided excellent service. 10/10 would recommend.',
+    date: '2024-10-05',
+    id: 10,
+    rating: 5,
+    user: {
+      avatarUrl: '/img/avatar-angelina.jpg',
+      id: 110,
+      isPro: true,
+      name: 'Ava Martinez'
+    }
+  }
+];
+
 

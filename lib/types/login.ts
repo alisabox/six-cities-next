@@ -1,6 +1,6 @@
 import { StringMap } from './global';
 
-export interface LoginFormState<T> {
+export interface FormState<T> {
   errors?: StringMap;
   successMsg?: string;
   data?: T;

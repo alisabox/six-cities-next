@@ -1,10 +1,10 @@
 'use server';
 
 import { loginSchema } from '@/lib/schemas/login';
-import { LoginForm, LoginFormState } from '@/lib/types/login';
+import { LoginForm, FormState } from '@/lib/types/login';
 import { convertZodErrors } from '@/lib/utils';
 
-export const loginAction = async (data: LoginForm): Promise<LoginFormState<undefined>> => {
+export const loginAction = async (data: LoginForm): Promise<FormState<LoginForm>> => {
   const { success, error } = loginSchema.safeParse(data);
 
   if (!success) {

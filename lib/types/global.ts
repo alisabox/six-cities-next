@@ -51,6 +51,7 @@ export type ReviewsType = {
   id: number;
   rating: number;
   user: UserType;
+  offerId: number;
 };
 
 export type PostReviewType = {
@@ -63,3 +64,42 @@ export type FavoriteCitiesType = {
 };
 
 export type SearchParams = { [key: string]: string | string[] | undefined };
+
+export type RawOfferData = {
+  offer_id: number;
+  title: string;
+  description: string;
+  bedrooms: number;
+  max_adults: number;
+  price: string;
+  rating: string;
+  is_favorite: boolean;
+  is_premium: boolean;
+  type: 'ROOM' | 'APARTMENT' | 'HOUSE' | 'HOTEL';
+  preview_image: string;
+  city_name: string;
+  city_latitude: string;
+  city_longitude: string;
+  city_zoom: number;
+  host_id: number;
+  host_name: string;
+  host_avatar: string;
+  host_is_pro: boolean;
+  latitude: string;
+  longitude: string;
+  zoom: number;
+  goods: string[];
+  images: string[];
+};
+
+export type RawReviewType = {
+  comment_id: number;
+  comment: string;
+  date: string;
+  rating: string;
+  offer_id: number;
+  user_id: number;
+  user_name: string;
+  user_avatar_url: string;
+  user_is_pro: boolean;
+};

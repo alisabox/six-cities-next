@@ -2,11 +2,12 @@ import Link from 'next/link';
 import MainScreenEmpty from '@/components/main-empty';
 import OffersList from '@/components/offers-list';
 import { AppRoute, cities } from '@/lib/const';
-import { offers } from '@/lib/data';
+import { fetchOffers } from '@/lib/data';
 import '@/public/css/main.css';
 
 
-export default function MainScreen({ selectedCity }: { selectedCity: string }) {
+export default async function MainScreen({ selectedCity }: { selectedCity: string }) {
+  const offers = await fetchOffers();
   const offersInSelectedCity = offers.filter(offer => offer.city.name === selectedCity);
 
   return (

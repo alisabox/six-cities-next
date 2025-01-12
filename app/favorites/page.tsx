@@ -4,11 +4,12 @@ import FavoritesScreenEmpty from '@/components/favorites-empty';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import { AppRoute, cities } from '@/lib/const';
-import { offers } from '@/lib/data';
+import { fetchOffers } from '@/lib/data';
 import { FavoriteCitiesType, OffersType } from '@/lib/types/global';
 import '@/public/css/main.css';
 
-export default function Favorites() {
+export default async function Favorites() {
+  const offers = await fetchOffers();
   const favoriteOffers: OffersType[] = offers.filter(offer => offer.isFavorite);
   const favoriteCities: FavoriteCitiesType = {};
   cities.map((city) => {

@@ -1,29 +1,26 @@
-'use client';
-
-import dynamic from 'next/dynamic';
-import { useParams } from 'next/navigation';
 import Loading from '@/app/loading';
 import Card from '@/components/card';
 import Header from '@/components/header';
 import { BookmarkIcon } from '@/components/icons/bookmark';
+import OfferPageMap from '@/components/offer-page-map';
 import ReviewsList from '@/components/review-list';
 import { MAX_RATING, RoomTypes } from '@/lib/const';
-import { offers, reviews } from '@/lib/data';
+import { fetchNearbyOffers, fetchOfferById, fetchReviewsById } from '@/lib/data';
 
-const Map = dynamic(() => import('@/components/map'), { ssr: false });
 
-type OfferParams = {
-  id: string;
+type Props = {
+  params: Promise<{ id: string }>;
 };
 
 const MAX_NUMBER_OF_IMAGES = 6;
 
-export default function Offer() {
-  const params = useParams<OfferParams>();
-  const id = parseInt(params.id!, 10);
+export default async function Offer({ params }: Props) {
+  const id = (await params)?.id;
+  const offerId = parseInt(id, 10);
 
-  const offer = offers.find(x => x.id === id);
-  const nearbyOffers = offers.filter(x => x.city.name === offer?.city.name && x.id !== id);
+  const offer = await fetchOfferById(offerId);
+  const nearbyOffers = offer && await fetchNearbyOffers({ offerId: offer.id, city: 'Paris' });
+  const reviews = await fetchReviewsById(offerId);
 
   if (!offer) {
     return (
@@ -80,7 +77,7 @@ export default function Offer() {
                   className={`property__bookmark-button 
                     ${isFavorite ? 'property__bookmark-button--active' : ''} button`}
                   type="button"
-                  onClick={() => console.log('clicked')}
+                  // onClick={() => console.log('clicked')}
                 >
                   <BookmarkIcon className="property__bookmark-icon" />
                   <span className="visually-hidden">To bookmarks</span>
@@ -155,13 +152,7 @@ export default function Offer() {
               }
             </div>
           </div>
-          <section className="property__map map">
-            {
-              nearbyOffers
-                ? <Map offers={[offer, ...nearbyOffers]} selectedPoint={id} />
-                : ''
-            }
-          </section>
+          <OfferPageMap currentOffer={offer} nearbyOffers={nearbyOffers} />
         </section>
         <div className="container">
           <section className="near-places places">

@@ -59,6 +59,11 @@ export type PostReviewType = {
   rating: number;
 };
 
+export type FavoriteStatusUpdateType = {
+  isFavorite: boolean;
+  offerId: number;
+};
+
 export type FavoriteCitiesType = {
   [key: CityType['name']]: OffersType[];
 };

@@ -191,3 +191,24 @@ export async function fetchReviewsById(offerId: number): Promise<ReviewsType[]> 
     throw new Error('Failed to reviews.');
   }
 }
+
+type UpdateOfferFavoriteStatus = {
+  isFavorite: boolean;
+  offerId: number;
+};
+
+export async function updateOfferFavoriteStatus({ isFavorite, offerId }: UpdateOfferFavoriteStatus):
+Promise<OffersType> {
+  const sql = neon(`${process.env.DATABASE_URL}`);
+  try {
+    await sql(`
+        UPDATE offers
+        SET is_favorite = $1
+        WHERE id = $2;
+    `, [isFavorite, offerId]);
+    return fetchOfferById(offerId);
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update offer favorite status.');
+  }
+}

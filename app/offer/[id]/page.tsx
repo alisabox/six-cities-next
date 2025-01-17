@@ -1,7 +1,7 @@
 import Loading from '@/app/loading';
 import Card from '@/components/card';
+import FavoriteButton from '@/components/favorite-button';
 import Header from '@/components/header';
-import { BookmarkIcon } from '@/components/icons/bookmark';
 import OfferPageMap from '@/components/offer-page-map';
 import ReviewsList from '@/components/review-list';
 import { MAX_RATING, RoomTypes } from '@/lib/const';
@@ -73,15 +73,7 @@ export default async function Offer({ params }: Props) {
               }
               <div className="property__name-wrapper">
                 <h1 className="property__name">{title}</h1>
-                <button
-                  className={`property__bookmark-button 
-                    ${isFavorite ? 'property__bookmark-button--active' : ''} button`}
-                  type="button"
-                  // onClick={() => console.log('clicked')}
-                >
-                  <BookmarkIcon className="property__bookmark-icon" />
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
+                <FavoriteButton isFavorite={isFavorite} offerId={offerId} />
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">

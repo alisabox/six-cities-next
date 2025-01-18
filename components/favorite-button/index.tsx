@@ -8,10 +8,10 @@ import { favoriteStatusUpdateAction } from '@/lib/actions/offer';
 type Props = {
   isFavorite?: boolean;
   offerId: number;
-  isCard?: boolean;
+  className?: string;
 };
 
-export default function FavoriteButton({ isFavorite, offerId, isCard = false }: Props) {
+export default function FavoriteButton({ isFavorite, offerId, className }: Props) {
   const [isFavoriteState, setIsFavoriteState] = React.useState(isFavorite);
 
   const handleFavoriteClick = async () => {
@@ -19,8 +19,6 @@ export default function FavoriteButton({ isFavorite, offerId, isCard = false }: 
     const { data } = await favoriteStatusUpdateAction({ isFavorite: !isFavoriteState, offerId });
     if (!data) setIsFavoriteState(isFavoriteState);
   };
-
-  const className = isCard ? 'place-card__bookmark' : 'property__bookmark';
 
   return (
     <button

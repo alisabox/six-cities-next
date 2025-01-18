@@ -73,7 +73,7 @@ export default async function Offer({ params }: Props) {
               }
               <div className="property__name-wrapper">
                 <h1 className="property__name">{title}</h1>
-                <FavoriteButton isFavorite={isFavorite} offerId={offerId} />
+                <FavoriteButton isFavorite={isFavorite} offerId={offerId} className={'property__bookmark'}/>
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">

@@ -74,7 +74,7 @@ function Card({ offer, listItemHoverHandler, isMainScreen, isFavoriteScreen, isP
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <FavoriteButton isFavorite={isFavorite} offerId={offer.id} isCard={true}/>
+          <FavoriteButton isFavorite={isFavorite} offerId={offer.id} className={'place-card__bookmark'}/>
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">

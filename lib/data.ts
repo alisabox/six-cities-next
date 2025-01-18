@@ -164,6 +164,59 @@ Promise<OffersType[]> {
   }
 }
 
+export async function fetchFavoriteOffers(): Promise<OffersType[]> {
+  const sql = neon(`${process.env.DATABASE_URL}`);
+  try {
+    const data = await sql(`
+      SELECT 
+        o.id AS offer_id,
+        o.title,
+        o.description,
+        o.bedrooms,
+        o.max_adults,
+        o.price,
+        o.rating,
+        o.is_favorite,
+        o.is_premium,
+        o.type,
+        o.preview_image,
+        c.name AS city_name,
+        c.latitude AS city_latitude,
+        c.longitude AS city_longitude,
+        c.zoom AS city_zoom,
+        h.id AS host_id,
+        h.name AS host_name,
+        h.avatar_url AS host_avatar,
+        h.is_pro AS host_is_pro,
+        o.latitude,
+        o.longitude,
+        o.zoom,
+        ARRAY_AGG(DISTINCT g.name) AS goods,
+        ARRAY_AGG(DISTINCT i.url) AS images
+      FROM 
+          offers o
+      JOIN 
+          cities c ON o.city_id = c.id
+      JOIN 
+          hosts h ON o.host_id = h.id
+      LEFT JOIN 
+          offer_goods og ON o.id = og.offer_id
+      LEFT JOIN 
+          goods g ON og.good_id = g.id
+      LEFT JOIN 
+          images i ON o.id = i.offer_id
+      WHERE
+          o.is_favorite = true
+      GROUP BY
+          o.id, c.id, h.id;
+    `) as RawOfferData[];
+    return convertOffersData(data);
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch the offers.');
+  }
+}
+
 export async function fetchReviewsById(offerId: number): Promise<ReviewsType[]> {
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {

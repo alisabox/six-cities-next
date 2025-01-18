@@ -4,21 +4,19 @@ import FavoritesScreenEmpty from '@/components/favorites-empty';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import { AppRoute, cities } from '@/lib/const';
-import { fetchOffers } from '@/lib/data';
+import { fetchFavoriteOffers } from '@/lib/data';
 import { FavoriteCitiesType, OffersType } from '@/lib/types/global';
 import '@/public/css/main.css';
 
 export default async function Favorites() {
-  const offers = await fetchOffers();
-  const favoriteOffers: OffersType[] = offers.filter(offer => offer.isFavorite);
-  const favoriteCities: FavoriteCitiesType = {};
-  cities.map((city) => {
-    const cityFavoriteOffers = favoriteOffers.filter((offer) => offer.city.name === city);
-    if (cityFavoriteOffers.length > 0) {
-      return favoriteCities[city] = cityFavoriteOffers;
+  const favoriteOffers: OffersType[] = await fetchFavoriteOffers();
+  const favoriteOffersByCity: FavoriteCitiesType = cities.reduce((acc, city) => {
+    const offersInCity = favoriteOffers.filter((offer) => offer.city.name === city);
+    if (offersInCity.length > 0) {
+      return { ...acc, [city]: offersInCity };
     }
-    return null;
-  });
+    return acc;
+  }, {} as FavoriteCitiesType);
 
   return !favoriteOffers.length
     ? (<FavoritesScreenEmpty />)
@@ -31,7 +29,7 @@ export default async function Favorites() {
               <h1 className="favorites__title">Saved listing</h1>
               <ul className="favorites__list">
                 {
-                  Object.entries(favoriteCities).map((entry) => (
+                  Object.entries(favoriteOffersByCity).map((entry) => (
                     <li key={entry[0]} className="favorites__locations-items">
                       <div className="favorites__locations locations locations--current">
                         <div className="locations__item">

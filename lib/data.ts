@@ -1,7 +1,7 @@
 'use server';
 
 import { neon } from '@neondatabase/serverless';
-import { OffersType, RawOfferData, RawReviewType, ReviewsType } from '@/lib/types/global';
+import { OffersType, RawOfferData, RawReviewType, ReviewsType, UserType } from '@/lib/types/global';
 import { convertOfferData, convertOffersData, convertReviewsData } from '@/lib/utils';
 
 
@@ -263,5 +263,20 @@ Promise<OffersType> {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to update offer favorite status.');
+  }
+}
+
+export async function getUserByEmail(email: string): Promise<UserType> {
+  const sql = neon(`${process.env.DATABASE_URL}`);
+  try {
+    const user = await sql(`
+    SELECT id, email, password 
+    FROM users 
+    WHERE email = $1
+    `, [email]) as UserType[];
+    return user[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to get user details.');
   }
 }

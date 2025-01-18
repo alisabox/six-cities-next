@@ -20,6 +20,8 @@ export type UserType = {
   name: string;
   ['avatar_url']?: string,
   ['is_pro']?: boolean,
+  email: string;
+  password: string;
 };
 
 export type OffersType = {

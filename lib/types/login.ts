@@ -15,3 +15,8 @@ export interface LoginForm {
 export interface StringToBooleanMap {
   [key: string]: boolean;
 }
+
+export type SessionPayload = {
+  userId: string | number;
+  expiresAt: Date;
+};

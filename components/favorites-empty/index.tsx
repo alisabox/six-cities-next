@@ -1,10 +1,12 @@
 import Footer from '@/components/footer';
 import Header from '@/components/header';
+import { verifySession } from '@/lib/auth';
 
-export default function FavoritesScreenEmpty() {
+export default async function FavoritesScreenEmpty() {
+  const { userId } = await verifySession();
   return (
     <div className="page page--favorites-empty">
-      <Header isWithUserNavigation/>
+      <Header isWithUserNavigation={ true } userId={userId} />
 
       <main className="page__main page__main--favorites page__main--favorites-empty">
         <div className="page__favorites-container container">

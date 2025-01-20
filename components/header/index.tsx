@@ -6,9 +6,10 @@ import '@/public/css/main.css';
 
 type HeaderProps = {
   isWithUserNavigation?: boolean;
+  userId?: number;
 };
 
-export default function Header({ isWithUserNavigation }: HeaderProps) {
+export default function Header({ isWithUserNavigation, userId }: HeaderProps) {
   return (
     <header className="header">
       <div className="container">
@@ -26,7 +27,7 @@ export default function Header({ isWithUserNavigation }: HeaderProps) {
             </Link>
           </div>
           {
-            isWithUserNavigation ? <UserNavigation/> : ''
+            isWithUserNavigation ? <UserNavigation userId={userId} /> : ''
           }
         </div>
       </div>

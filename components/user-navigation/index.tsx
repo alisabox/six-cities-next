@@ -1,26 +1,28 @@
-'use client';
-
 import Link from 'next/link';
 import { logout } from '@/lib/actions/login';
-import { AppRoute, AuthorizationStatus } from '@/lib/const';
+import { AppRoute } from '@/lib/const';
+import { getUserById } from '@/lib/data';
 import '@/public/css/main.css';
 
-export default function UserNavigation() {
-  const authorizationStatus = AuthorizationStatus.Auth;
-  const userEmail = 'xxxx@gmail.com';
+type Props = {
+  userId?: number;
+};
+
+export default async function UserNavigation({ userId }: Props) {
+  const user = userId ? await getUserById(userId) : null;
 
   return (
     <nav className="header__nav">
       <ul className="header__nav-list">
         {
-          authorizationStatus === AuthorizationStatus.Auth
+          !!user
             ?
             <>
               <li className="header__nav-item user">
                 <Link className="header__nav-link header__nav-link--profile" href={AppRoute.FAVORITE}>
                   <div className="header__avatar-wrapper user__avatar-wrapper">
                   </div>
-                  <span className="header__user-name user__name">{userEmail}</span>
+                  <span className="header__user-name user__name">{user.email}</span>
                 </Link>
               </li>
               <li className="header__nav-item">

@@ -1,26 +1,33 @@
+'use client';
 import React from 'react';
 import ReviewForm from '@/components/review-form';
 import { MAX_RATING } from '@/lib/const';
+import { fetchReviewsById } from '@/lib/data';
 import { ReviewsType } from '@/lib/types/global';
 
 type ReviewsListProps = {
-  reviews: ReviewsType[];
+  offerId: number;
+  userId?: number;
 };
 
-const MAX_NUMBER_OF_REVIEWS = 10;
+export default function ReviewsList({ offerId, userId }: ReviewsListProps) {
+  const [reviews, setReviews] = React.useState<ReviewsType[]>();
+  const updateReviews = React.useCallback(() => {
+    fetchReviewsById(offerId).then(setReviews);
+  }, [offerId]);
 
-export default function ReviewsList({ reviews }: ReviewsListProps) {
-  const sortedReviews = reviews.length >= 10
-    ? reviews.slice(reviews.length - MAX_NUMBER_OF_REVIEWS, reviews.length).reverse()
-    : reviews.slice().reverse();
+  React.useEffect(() => {
+    updateReviews();
+  }, [updateReviews]);
+
   return (
     <section className="property__reviews reviews">
       <h2 className="reviews__title">
-        Reviews &middot; <span className="reviews__amount">{sortedReviews?.length}</span>
+        Reviews &middot; <span className="reviews__amount">{reviews?.length}</span>
       </h2>
       <ul className="reviews__list">
         {
-          sortedReviews.map((review) => {
+          reviews?.map((review) => {
             const date = new Date(review.date);
             const dateTime = date.toISOString().substring(0, 10);
             const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -58,7 +65,11 @@ export default function ReviewsList({ reviews }: ReviewsListProps) {
           })
         }
       </ul>
-      <ReviewForm />
+      {
+        !!userId && (
+          <ReviewForm userId={userId} offerId={offerId} updateReviews={updateReviews}/>
+        )
+      }
     </section>
   );
 }

@@ -4,8 +4,9 @@ import FavoriteButton from '@/components/favorite-button';
 import Header from '@/components/header';
 import OfferPageMap from '@/components/offer-page-map';
 import ReviewsList from '@/components/review-list';
+import { verifySession } from '@/lib/auth';
 import { MAX_RATING, RoomTypes } from '@/lib/const';
-import { fetchNearbyOffers, fetchOfferById, fetchReviewsById } from '@/lib/data';
+import { fetchNearbyOffers, fetchOfferById } from '@/lib/data';
 
 
 type Props = {
@@ -15,12 +16,12 @@ type Props = {
 const MAX_NUMBER_OF_IMAGES = 6;
 
 export default async function Offer({ params }: Props) {
+  const { userId } = await verifySession();
   const id = (await params)?.id;
   const offerId = parseInt(id, 10);
 
   const offer = await fetchOfferById(offerId);
   const nearbyOffers = offer && await fetchNearbyOffers({ offerId: offer.id, city: 'Paris' });
-  const reviews = await fetchReviewsById(offerId);
 
   if (!offer) {
     return (
@@ -46,7 +47,7 @@ export default async function Offer({ params }: Props) {
 
   return (
     <div className="page">
-      <Header isWithUserNavigation />
+      <Header isWithUserNavigation={true} userId={userId} />
 
       <main className="page__main page__main--property">
         <section className="property">
@@ -137,11 +138,7 @@ export default async function Offer({ params }: Props) {
                   </p>
                 </div>
               </div>
-              {
-                reviews
-                  ? <ReviewsList reviews={reviews} />
-                  : ''
-              }
+              <ReviewsList offerId={offerId} userId={userId} />
             </div>
           </div>
           <OfferPageMap currentOffer={offer} nearbyOffers={nearbyOffers} />

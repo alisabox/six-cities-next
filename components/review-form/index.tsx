@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-// import { useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import StarInput from '@/components/star-input';
@@ -13,9 +12,13 @@ import { PostReviewType } from '@/lib/types/global';
 const MIN_REVIEW_LENGTH = 50;
 const MAX_REVIEW_LENGTH = 300;
 
-export default function ReviewForm() {
-  // const id = useParams()?.id as string;
+type Props = {
+  offerId: number;
+  userId: number;
+  updateReviews: () => void;
+};
 
+export default function ReviewForm({ offerId, userId, updateReviews }: Props) {
   const {
     register,
     handleSubmit,
@@ -37,8 +40,9 @@ export default function ReviewForm() {
   }, [setValue]);
 
   const onSubmit = async (data: PostReviewType) => {
-    const { successMsg } = await reviewSubmitAction(data);
+    const { successMsg } = await reviewSubmitAction({ data, userId, offerId });
     if (successMsg) {
+      updateReviews();
       toast.success(successMsg);
       reset();
     }

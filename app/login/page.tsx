@@ -98,7 +98,7 @@ export default function Login() {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <Link className="locations__item-link" href={AppRoute.ROOT}>
+              <Link className="locations__item-link" href={AppRoute.ROOT + `?city=${randomCity.toLowerCase()}`}>
                 <span>{randomCity}</span>
               </Link>
             </div>

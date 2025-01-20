@@ -3,12 +3,14 @@ import Card from '@/components/card';
 import FavoritesScreenEmpty from '@/components/favorites-empty';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
+import { verifySession } from '@/lib/auth';
 import { AppRoute, cities } from '@/lib/const';
 import { fetchFavoriteOffers } from '@/lib/data';
 import { FavoriteCitiesType, OffersType } from '@/lib/types/global';
 import '@/public/css/main.css';
 
 export default async function Favorites() {
+  const { userId } = await verifySession();
   const favoriteOffers: OffersType[] = await fetchFavoriteOffers();
   const favoriteOffersByCity: FavoriteCitiesType = cities.reduce((acc, city) => {
     const offersInCity = favoriteOffers.filter((offer) => offer.city.name === city);
@@ -22,7 +24,7 @@ export default async function Favorites() {
     ? (<FavoritesScreenEmpty />)
     : (
       <div className="page">
-        <Header isWithUserNavigation />
+        <Header isWithUserNavigation={true} userId={userId} />
         <main className="page__main page__main--favorites">
           <div className="page__favorites-container container">
             <section className="favorites">

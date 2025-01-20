@@ -39,5 +39,5 @@ export const loginAction = async (data: LoginForm): Promise<FormState<LoginForm>
 };
 
 export async function logout() {
-  deleteSession();
+  return deleteSession();
 }

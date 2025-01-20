@@ -43,13 +43,13 @@ export async function createSession(userId: string) {
   redirect('/');
 }
 
-export async function verifySession() {
+export async function verifySession(): Promise<{ isAuth: boolean, userId?: number }> {
   const allCookies = await cookies();
   const cookie = allCookies.get('session')?.value;
   const session = await decrypt(cookie);
 
   if (!session?.userId) {
-    redirect('/login');
+    return { isAuth: false };
   }
 
   return { isAuth: true, userId: Number(session.userId) };
@@ -74,9 +74,8 @@ export async function updateSession() {
   });
 }
 
-export function deleteSession() {
-  cookies().then(res => {
-    res.delete('session');
-    redirect('/login');
-  });
+export async function deleteSession() {
+  const allCookies = await cookies();
+  allCookies.delete('session');
+  redirect('/login');
 }

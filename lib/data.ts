@@ -1,7 +1,7 @@
 'use server';
 
 import { neon } from '@neondatabase/serverless';
-import { OffersType, RawOfferData, RawReviewType, ReviewsType, UserType } from '@/lib/types/global';
+import { OffersType, PostReviewType, RawOfferData, RawReviewType, ReviewsType, UserType } from '@/lib/types/global';
 import { convertOfferData, convertOffersData, convertReviewsData } from '@/lib/utils';
 
 
@@ -236,7 +236,9 @@ export async function fetchReviewsById(offerId: number): Promise<ReviewsType[]> 
                 JOIN
             users u ON c.user_id = u.id
         WHERE
-            c.offer_id = $1;
+            c.offer_id = $1
+        ORDER BY c.date DESC
+        LIMIT 10;
     `, [offerId]) as RawReviewType[];
     return convertReviewsData(data);
   } catch (error) {
@@ -278,5 +280,41 @@ export async function getUserByEmail(email: string): Promise<UserType> {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to get user details.');
+  }
+}
+
+export async function getUserById(userId: number): Promise<UserType> {
+  const sql = neon(`${process.env.DATABASE_URL}`);
+  try {
+    const user = await sql(`
+        SELECT id, email
+        FROM users
+        WHERE id = $1
+    `, [userId]) as UserType[];
+    return user[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to get user details.');
+  }
+}
+
+export async function addReview({
+  data,
+  userId,
+  offerId
+}: {
+  data: PostReviewType,
+  userId: number,
+  offerId: number
+}): Promise<void> {
+  const sql = neon(`${process.env.DATABASE_URL}`);
+  try {
+    await sql(`
+        INSERT INTO comments (date, comment, rating, offer_id, user_id)
+        VALUES (NOW(), $1, $2, $3, $4);
+    `, [data.comment, data.rating, offerId, userId]) as UserType[];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to add review.');
   }
 }

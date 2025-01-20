@@ -26,7 +26,7 @@ export const loginAction = async (data: LoginForm): Promise<FormState<LoginForm>
 
   const passwordMatch = await bcrypt.compare(
     data.password,
-    user.password,
+    user?.password || '',
   );
 
   if (!passwordMatch) {

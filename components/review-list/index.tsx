@@ -7,10 +7,9 @@ import { ReviewsType } from '@/lib/types/global';
 
 type ReviewsListProps = {
   offerId: number;
-  userId?: number;
 };
 
-export default function ReviewsList({ offerId, userId }: ReviewsListProps) {
+export default function ReviewsList({ offerId }: ReviewsListProps) {
   const [reviews, setReviews] = React.useState<ReviewsType[]>();
   const updateReviews = React.useCallback(() => {
     fetchReviewsById(offerId).then(setReviews);
@@ -65,11 +64,7 @@ export default function ReviewsList({ offerId, userId }: ReviewsListProps) {
           })
         }
       </ul>
-      {
-        !!userId && (
-          <ReviewForm userId={userId} offerId={offerId} updateReviews={updateReviews}/>
-        )
-      }
+      <ReviewForm offerId={offerId} updateReviews={updateReviews}/>
     </section>
   );
 }

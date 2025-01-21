@@ -138,7 +138,7 @@ export default async function Offer({ params }: Props) {
                   </p>
                 </div>
               </div>
-              <ReviewsList offerId={offerId} userId={userId} />
+              <ReviewsList offerId={offerId} />
             </div>
           </div>
           <OfferPageMap currentOffer={offer} nearbyOffers={nearbyOffers} />

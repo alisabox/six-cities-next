@@ -1,11 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import StarInput from '@/components/star-input';
 import { reviewSubmitAction } from '@/lib/actions/review';
+import { AuthContext } from '@/lib/context/auth';
 import { reviewSchema } from '@/lib/schemas/review';
 import { PostReviewType } from '@/lib/types/global';
 
@@ -14,11 +15,11 @@ const MAX_REVIEW_LENGTH = 300;
 
 type Props = {
   offerId: number;
-  userId: number;
   updateReviews: () => void;
 };
 
-export default function ReviewForm({ offerId, userId, updateReviews }: Props) {
+export default function ReviewForm({ offerId, updateReviews }: Props) {
+  const { userId } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -40,6 +41,7 @@ export default function ReviewForm({ offerId, userId, updateReviews }: Props) {
   }, [setValue]);
 
   const onSubmit = async (data: PostReviewType) => {
+    if (!userId) return;
     const { successMsg } = await reviewSubmitAction({ data, userId, offerId });
     if (successMsg) {
       updateReviews();
@@ -48,7 +50,7 @@ export default function ReviewForm({ offerId, userId, updateReviews }: Props) {
     }
   };
 
-  return (
+  return userId ? (
     <form className="reviews__form form" onSubmit={handleSubmit(onSubmit)}>
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
@@ -82,5 +84,5 @@ export default function ReviewForm({ offerId, userId, updateReviews }: Props) {
         >Submit</button>
       </div>
     </form>
-  );
+  ) : '';
 }

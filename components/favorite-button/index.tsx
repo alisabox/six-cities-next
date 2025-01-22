@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useContext } from 'react';
+import { useRouter } from 'next/navigation';
 import { BookmarkIcon } from '@/components/icons/bookmark';
 import '@/public/css/main.css';
 import { favoriteStatusUpdateAction } from '@/lib/actions/offer';
@@ -15,11 +16,17 @@ type Props = {
 export default function FavoriteButton({ isFavorite, offerId, className }: Props) {
   const [isFavoriteState, setIsFavoriteState] = React.useState(isFavorite);
   const { isAuth } = useContext(AuthContext);
+  const router = useRouter();
 
   const handleFavoriteClick = async () => {
     setIsFavoriteState(prev => !prev);
-    const { data } = await favoriteStatusUpdateAction({ isFavorite: !isFavoriteState, offerId });
-    if (!data) setIsFavoriteState(isFavoriteState);
+    try {
+      await favoriteStatusUpdateAction({ isFavorite: !isFavoriteState, offerId });
+      router.refresh();
+    } catch (error) {
+      setIsFavoriteState(isFavoriteState);
+      console.error(error);
+    }
   };
 
   return isAuth ? (

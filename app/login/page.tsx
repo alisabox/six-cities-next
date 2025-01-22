@@ -24,8 +24,8 @@ export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'test.user@mail.com',
+      password: '123aaa',
     },
     mode: 'onBlur'
   });

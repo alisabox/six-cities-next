@@ -1,11 +1,13 @@
 'use server';
 
 import { neon } from '@neondatabase/serverless';
+import { verifySession } from '@/lib/auth';
 import { OffersType, PostReviewType, RawOfferData, RawReviewType, ReviewsType, UserType } from '@/lib/types/global';
 import { convertOfferData, convertOffersData, convertReviewsData } from '@/lib/utils';
 
 
 export async function fetchOffers(): Promise<OffersType[]> {
+  const { userId } = await verifySession();
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
     const data = await sql(`
@@ -17,7 +19,6 @@ export async function fetchOffers(): Promise<OffersType[]> {
         o.max_adults,
         o.price,
         o.rating,
-        o.is_favorite,
         o.is_premium,
         o.type,
         o.preview_image,
@@ -33,7 +34,14 @@ export async function fetchOffers(): Promise<OffersType[]> {
         o.longitude,
         o.zoom,
         ARRAY_AGG(DISTINCT g.name) AS goods,
-        ARRAY_AGG(DISTINCT i.url) AS images
+        ARRAY_AGG(DISTINCT i.url) AS images,
+        (CASE WHEN EXISTS (SELECT 1
+                           FROM favorite_offers fav
+                           WHERE fav.user_id = $1 AND
+                               o.id = fav.offer_id
+                         )
+                  THEN TRUE ELSE FALSE
+            END) AS is_favorite
       FROM 
           offers o
       JOIN 
@@ -48,7 +56,7 @@ export async function fetchOffers(): Promise<OffersType[]> {
           images i ON o.id = i.offer_id
       GROUP BY 
           o.id, c.id, h.id;
-    `) as RawOfferData[];
+    `, [userId]) as RawOfferData[];
     return convertOffersData(data);
   } catch (error) {
     console.error('Database Error:', error);
@@ -57,6 +65,7 @@ export async function fetchOffers(): Promise<OffersType[]> {
 }
 
 export async function fetchOfferById(offerId: number): Promise<OffersType> {
+  const { userId } = await verifySession();
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
     const data = await sql(`
@@ -68,7 +77,6 @@ export async function fetchOfferById(offerId: number): Promise<OffersType> {
         o.max_adults,
         o.price,
         o.rating,
-        o.is_favorite,
         o.is_premium,
         o.type,
         o.preview_image,
@@ -84,7 +92,14 @@ export async function fetchOfferById(offerId: number): Promise<OffersType> {
         o.longitude,
         o.zoom,
         ARRAY_AGG(DISTINCT g.name) AS goods,
-        ARRAY_AGG(DISTINCT i.url) AS images
+        ARRAY_AGG(DISTINCT i.url) AS images,
+        (CASE WHEN EXISTS (SELECT 1
+                           FROM favorite_offers fav
+                           WHERE fav.user_id = $1 AND
+                               o.id = fav.offer_id
+        )
+                  THEN TRUE ELSE FALSE
+            END) AS is_favorite
       FROM 
           offers o
       JOIN 
@@ -101,7 +116,7 @@ export async function fetchOfferById(offerId: number): Promise<OffersType> {
           o.id = ${offerId}
       GROUP BY 
           o.id, c.id, h.id;
-    `) as RawOfferData[];
+    `, [userId]) as RawOfferData[];
     return convertOfferData(data[0]);
   } catch (error) {
     console.error('Database Error:', error);
@@ -111,6 +126,7 @@ export async function fetchOfferById(offerId: number): Promise<OffersType> {
 
 export async function fetchNearbyOffers({ offerId, city }: { offerId: number, city: string }):
 Promise<OffersType[]> {
+  const { userId } = await verifySession();
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
     const data = await sql(`
@@ -122,7 +138,6 @@ Promise<OffersType[]> {
             o.max_adults,
             o.price,
             o.rating,
-            o.is_favorite,
             o.is_premium,
             o.type,
             o.preview_image,
@@ -138,7 +153,14 @@ Promise<OffersType[]> {
             o.longitude,
             o.zoom,
             ARRAY_AGG(DISTINCT g.name) AS goods,
-            ARRAY_AGG(DISTINCT i.url) AS images
+            ARRAY_AGG(DISTINCT i.url) AS images,
+            (CASE WHEN EXISTS (SELECT 1
+                               FROM favorite_offers fav
+                               WHERE fav.user_id = $3 AND
+                                   o.id = fav.offer_id
+            )
+                      THEN TRUE ELSE FALSE
+                END) AS is_favorite
         FROM
             offers o
                 JOIN
@@ -156,7 +178,7 @@ Promise<OffersType[]> {
             AND c.name = $2
         GROUP BY
             o.id, c.id, h.id;
-    `, [offerId, city]) as RawOfferData[];
+    `, [offerId, city, userId]) as RawOfferData[];
     return convertOffersData(data);
   } catch (error) {
     console.error('Database Error:', error);
@@ -166,6 +188,7 @@ Promise<OffersType[]> {
 
 export async function fetchFavoriteOffers(): Promise<OffersType[]> {
   const sql = neon(`${process.env.DATABASE_URL}`);
+  const { userId } = await verifySession();
   try {
     const data = await sql(`
       SELECT 
@@ -176,7 +199,6 @@ export async function fetchFavoriteOffers(): Promise<OffersType[]> {
         o.max_adults,
         o.price,
         o.rating,
-        o.is_favorite,
         o.is_premium,
         o.type,
         o.preview_image,
@@ -192,7 +214,14 @@ export async function fetchFavoriteOffers(): Promise<OffersType[]> {
         o.longitude,
         o.zoom,
         ARRAY_AGG(DISTINCT g.name) AS goods,
-        ARRAY_AGG(DISTINCT i.url) AS images
+        ARRAY_AGG(DISTINCT i.url) AS images,
+        (CASE WHEN EXISTS (SELECT 1
+                           FROM favorite_offers fav
+                           WHERE fav.user_id = $1 AND
+                               o.id = fav.offer_id
+        )
+                  THEN TRUE ELSE FALSE
+            END) AS is_favorite
       FROM 
           offers o
       JOIN 
@@ -205,11 +234,13 @@ export async function fetchFavoriteOffers(): Promise<OffersType[]> {
           goods g ON og.good_id = g.id
       LEFT JOIN 
           images i ON o.id = i.offer_id
+      LEFT JOIN
+          favorite_offers fav ON o.id = fav.offer_id
       WHERE
-          o.is_favorite = true
+          fav.user_id = $1
       GROUP BY
           o.id, c.id, h.id;
-    `) as RawOfferData[];
+    `, [userId]) as RawOfferData[];
     return convertOffersData(data);
   } catch (error) {
     console.error('Database Error:', error);
@@ -254,13 +285,20 @@ type UpdateOfferFavoriteStatus = {
 
 export async function updateOfferFavoriteStatus({ isFavorite, offerId }: UpdateOfferFavoriteStatus):
 Promise<OffersType> {
+  const { userId } = await verifySession();
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
-    await sql(`
-        UPDATE offers
-        SET is_favorite = $1
-        WHERE id = $2;
-    `, [isFavorite, offerId]);
+    if (isFavorite) {
+      await sql(`
+        INSERT INTO favorite_offers (offer_id, user_id)
+        VALUES ($1, $2);
+    `, [offerId, userId]);
+    } else {
+      await sql(`
+        DELETE FROM favorite_offers
+        WHERE offer_id = $1 AND user_id = $2;
+    `, [offerId, userId]);
+    }
     return fetchOfferById(offerId);
   } catch (error) {
     console.error('Database Error:', error);

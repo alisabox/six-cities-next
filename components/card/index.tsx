@@ -16,7 +16,6 @@ type CardProps = {
 
 function Card({ offer, listItemHoverHandler, isMainScreen, isFavoriteScreen, isPropertyScreen }: CardProps) {
   const { isPremium, previewImage, title, price, rating, type, id, isFavorite } = offer;
-  // const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
   const handleHover = (evt: React.MouseEvent<HTMLElement>) => {
     if (!isMainScreen) {

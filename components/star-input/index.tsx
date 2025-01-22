@@ -16,14 +16,18 @@ export default function StarInput({ onChange, disabled, value }: Props) {
         <input
           className="form__rating-input visually-hidden"
           name="rating"
-          value={index + 1}
-          id={`${index + 1}-stars`}
+          value={RATINGS.length - index}
+          id={`${RATINGS.length - index}-stars`}
           type="radio"
           onChange={onChange}
-          checked={Number(value) === (index + 1)}
+          checked={Number(value) === (RATINGS.length - index)}
           disabled={disabled}
         />
-        <label htmlFor={`${index + 1}-stars`} className="reviews__rating-label form__rating-label" title={rating}>
+        <label
+          htmlFor={`${RATINGS.length - index}-stars`}
+          className="reviews__rating-label form__rating-label"
+          title={rating}
+        >
           <StarIcon className="form__star-image" width="37" height="33"/>
         </label>
       </React.Fragment>

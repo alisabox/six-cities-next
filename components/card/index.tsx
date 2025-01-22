@@ -60,7 +60,7 @@ function Card({ offer, listItemHoverHandler, isMainScreen, isFavoriteScreen, isP
       }
       <div className={`${getScreenClass()}__image-wrapper place-card__image-wrapper`}>
         <Link href={AppRoute.OFFER + `/${id}`}>
-          <img className="place-card__image" src={previewImage}
+          <img className="place-card__image" src={previewImage} style={{ height: '200px' }}
             width={isFavoriteScreen ? FavoriteCardImageSize.WIDTH : BasicCardImageSize.WIDTH}
             height={isFavoriteScreen ? FavoriteCardImageSize.HEIGHT : BasicCardImageSize.HEIGHT}
             alt={title}

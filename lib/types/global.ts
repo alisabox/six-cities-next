@@ -41,6 +41,7 @@ export type OffersType = {
   rating: number,
   title: string,
   type: string,
+  ['is_favorite']?: boolean,
   ['is_premium']?: boolean,
   ['max_adults']?: number,
   ['preview_image']?: string,

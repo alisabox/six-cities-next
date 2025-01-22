@@ -1,4 +1,4 @@
-import { OffersType, ReviewsType } from '@/lib/types/global';
+import { OffersType } from '@/lib/types/global';
 
 export const AppRoute = {
   ROOT: '/',
@@ -7,12 +7,6 @@ export const AppRoute = {
   FAVORITE: '/favorites',
   NOT_FOUND: '/not-found',
 } as const;
-
-export enum AuthorizationStatus {
-  Auth = 'AUTH',
-  NoAuth = 'NO_AUTH',
-  Unknown = 'UNKNOWN',
-}
 
 type RoomTypesType = {
   [key: string]: string;
@@ -41,12 +35,6 @@ const getRandomIndex = (min: number, max: number): number => {
 export const getRandomCity = (): string => {
   const index = getRandomIndex(0, cities.length - 1);
   return cities[index];
-};
-
-export const getRandomRoomType = (): string => {
-  const keys = Object.keys(RoomTypes);
-  const index = getRandomIndex(0, keys.length - 1);
-  return keys[index];
 };
 
 export const Markers = {
@@ -90,94 +78,7 @@ export const sortOffers = (data: OffersType[], filter: string | null): OffersTyp
   }
 };
 
-export const APIRoute = {
-  OFFERS: '/hotels',
-  LOGIN: '/login',
-  LOGOUT: '/logout',
-  REVIEWS: '/comments',
-  FAVORITE: '/favorite',
-};
-
-export const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
-  authorizationStatus === AuthorizationStatus.Unknown;
-
-
-export const adaptToClient = (data: OffersType): OffersType => {
-  const adaptedItem = Object.assign(
-    {},
-    data,
-    {
-      isFavorite: data['is_favorite'],
-      isPremium: data['is_premium'],
-      maxAdults: data['max_adults'],
-      previewImage: data['preview_image'],
-      host: {
-        avatarUrl: data.host['avatar_url'],
-        id: data.host.id,
-        isPro: data.host['is_pro'],
-        name: data.host.name,
-      },
-    },
-  );
-  delete adaptedItem['is_favorite'];
-  delete adaptedItem['is_premium'];
-  delete adaptedItem['max_adults'];
-  delete adaptedItem['preview_image'];
-  delete adaptedItem.host['avatar_url'];
-  delete adaptedItem.host['is_pro'];
-  return adaptedItem;
-};
-
-export const adaptReviewsToClient = (data: ReviewsType): ReviewsType => {
-  const adaptedItem = Object.assign(
-    {},
-    data,
-    {
-      user: {
-        avatarUrl: data.user['avatar_url'],
-        id: data.user.id,
-        isPro: data.user['is_pro'],
-        name: data.user.name,
-      },
-    },
-  );
-  delete adaptedItem.user['avatar_url'];
-  delete adaptedItem.user['is_pro'];
-  return adaptedItem;
-};
-
-export enum ActionType {
-  GetCityAction = 'MAIN/GET_CITY',
-  GetOffersAction = 'MAIN/GET_OFFERS',
-  GetOfferByIDAction = 'OFFERS/GET_OFFER',
-  ClearOfferByIDAction = 'OFFERS/CLEAR_OFFER',
-  GetNearByOffers = 'OFFERS/GET_NEARBY',
-  GetReviews = 'OFFERS/GET_REVIEWS',
-  PostReview = 'OFFERS/POST_REVIEW',
-  PostError = 'OFFERS/POST_REVIEW_ERROR',
-  ClearPostReviewStatus = 'OFFERS/CLEAR_POST_REVIEW_STATUS',
-  ClearPostReviewError = 'OFFERS/CLEAR_POST_REVIEW_ERROR',
-  GetFavoriteOffers = 'FAVORITE/GET_FAVORITE_OFFERS',
-  ClearFavoriteOffers = 'FAVORITE/CLEAR_FAVORITE_OFFERS',
-  AddToFavoriteOffers = 'FAVORITE/ADD_TO_FAVORITE',
-  RemoveFromFavoriteOffers = 'FAVORITE/REMOVE_FROM_FAVORITE',
-  RequireAuthorization = 'USER/REQUIRE_AUTHORIZATION',
-  RequireLogout = 'USER/REQUIRE_LOGOUT',
-  RedirectToRoute = 'USER/REDIRECT',
-}
-
-export const TypeOfFavoriteAction = {
-  ADDITION_TO_FAVOTITE: 1,
-  REMOVAL_FROM_FAVOTITE: 0,
-};
-
 export const LoginRegexp = {
   EMAIL: /[^@\s]+@[^@\s]+\.[^@\s]+$/,
   PASSWORD: /^(?=.*\d)(?=.*[a-zA-Z])/,
-};
-
-export const FailMessages = {
-  POST: 'Unable to send the message. Check your internet connection',
-  ADD_TO_FAVORITES: 'Unable to add to favorites. Check your internet connection',
-  REMOVE_FROM_FAVORITES: 'Unable to remove from favorites. Check your internet connection',
 };

@@ -21,7 +21,7 @@ export default async function Offer({ params }: Props) {
   const offerId = parseInt(id, 10);
 
   const offer = await fetchOfferById(offerId);
-  const nearbyOffers = offer && await fetchNearbyOffers({ offerId: offer.id, city: 'Paris' });
+  const nearbyOffers = offer && await fetchNearbyOffers({ offerId: offer.id, city: offer.city.name });
 
   if (!offer) {
     return (

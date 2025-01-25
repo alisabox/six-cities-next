@@ -1,3 +1,5 @@
+import { AppRoute } from '@/lib/const';
+
 export interface StringMap {
   [key: string]: string;
 }
@@ -110,3 +112,6 @@ export type RawReviewType = {
   user_avatar_url: string;
   user_is_pro: boolean;
 };
+
+export type AppRouteKey = keyof typeof AppRoute;
+export type AppRoutePath = typeof AppRoute[AppRouteKey];

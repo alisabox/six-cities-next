@@ -17,7 +17,7 @@ export const loginAction = async (data: LoginForm): Promise<FormState<LoginForm>
     };
   }
 
-  const loginErrorRes = { errors: { loginError: 'Invalid login credentials.' } };
+  const loginErrorRes = { errors: { message: 'Invalid login credentials.' } };
   const user = await getUserByEmail(data.email);
 
   if (!user) {

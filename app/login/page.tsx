@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import Header from '@/components/header';
 import { loginAction } from '@/lib/actions/login';
 import { AppRoute, getRandomCity, LoginRegexp } from '@/lib/const';
@@ -21,7 +20,7 @@ export default function Login() {
     setRandomCity(getRandomCity());
   }, []);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
+  const { register, handleSubmit, formState, setError } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: 'test.user@mail.com',
@@ -30,10 +29,17 @@ export default function Login() {
     mode: 'onBlur'
   });
 
-  const onSubmit = async (data: LoginForm) => {
-    const { successMsg } = await loginAction(data);
-    if (successMsg) {
-      toast.success(successMsg);
+  const { errors, isSubmitting } = formState;
+
+  const onSubmit = async (formData: LoginForm) => {
+    const { errors } = await loginAction(formData);
+    if (errors) {
+      if (errors['password']) {
+        setError('password', errors);
+      } else {
+        setError('email', errors);
+      }
+    } else {
       router.push(AppRoute.ROOT);
     }
   };
@@ -91,6 +97,7 @@ export default function Login() {
                 className="login__submit form__submit button"
                 type="submit"
                 data-testid="submit"
+                disabled={isSubmitting}
               >
                 Sign in
               </button>

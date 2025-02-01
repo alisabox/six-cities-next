@@ -1,12 +1,13 @@
 'use server';
 
+import { cache } from 'react';
 import { neon } from '@neondatabase/serverless';
 import { verifySession } from '@/lib/auth';
 import { OffersType, PostReviewType, RawOfferData, RawReviewType, ReviewsType, UserType } from '@/lib/types/global';
 import { convertOfferData, convertOffersData, convertReviewsData } from '@/lib/utils';
 
 
-export async function fetchOffers(): Promise<OffersType[]> {
+export const fetchOffers = cache(async (): Promise<OffersType[]> => {
   const { userId } = await verifySession();
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
@@ -62,9 +63,9 @@ export async function fetchOffers(): Promise<OffersType[]> {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch the offers.');
   }
-}
+});
 
-export async function fetchOfferById(offerId: number): Promise<OffersType> {
+export const fetchOfferById = cache(async(offerId: number): Promise<OffersType> => {
   const { userId } = await verifySession();
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
@@ -122,10 +123,10 @@ export async function fetchOfferById(offerId: number): Promise<OffersType> {
     console.error('Database Error:', error);
     throw new Error(`Failed to fetch the offer with id ${offerId}.`);
   }
-}
+});
 
-export async function fetchNearbyOffers({ offerId, city }: { offerId: number, city: string }):
-Promise<OffersType[]> {
+export const fetchNearbyOffers = cache(async({ offerId, city }: { offerId: number, city: string }):
+Promise<OffersType[]> => {
   const { userId } = await verifySession();
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
@@ -184,9 +185,9 @@ Promise<OffersType[]> {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch nearby offers.');
   }
-}
+});
 
-export async function fetchFavoriteOffers(): Promise<OffersType[]> {
+export const fetchFavoriteOffers = cache(async(): Promise<OffersType[]> => {
   const sql = neon(`${process.env.DATABASE_URL}`);
   const { userId } = await verifySession();
   try {
@@ -246,9 +247,9 @@ export async function fetchFavoriteOffers(): Promise<OffersType[]> {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch the offers.');
   }
-}
+});
 
-export async function fetchReviewsById(offerId: number): Promise<ReviewsType[]> {
+export const fetchReviewsById = cache(async(offerId: number): Promise<ReviewsType[]> => {
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
     const data = await sql(`
@@ -276,15 +277,15 @@ export async function fetchReviewsById(offerId: number): Promise<ReviewsType[]> 
     console.error('Database Error:', error);
     throw new Error('Failed to reviews.');
   }
-}
+});
 
 type UpdateOfferFavoriteStatus = {
   isFavorite: boolean;
   offerId: number;
 };
 
-export async function updateOfferFavoriteStatus({ isFavorite, offerId }: UpdateOfferFavoriteStatus):
-Promise<OffersType> {
+export const updateOfferFavoriteStatus = cache(async({ isFavorite, offerId }: UpdateOfferFavoriteStatus):
+Promise<OffersType> => {
   const { userId } = await verifySession();
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
@@ -304,9 +305,9 @@ Promise<OffersType> {
     console.error('Database Error:', error);
     throw new Error('Failed to update offer favorite status.');
   }
-}
+});
 
-export async function getUserByEmail(email: string): Promise<UserType> {
+export const getUserByEmail = cache(async(email: string): Promise<UserType> => {
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
     const user = await sql(`
@@ -319,9 +320,9 @@ export async function getUserByEmail(email: string): Promise<UserType> {
     console.error('Database Error:', error);
     throw new Error('Failed to get user details.');
   }
-}
+});
 
-export async function getUserById(userId: number): Promise<UserType> {
+export const getUserById = cache(async(userId: number): Promise<UserType> => {
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
     const user = await sql(`
@@ -334,7 +335,7 @@ export async function getUserById(userId: number): Promise<UserType> {
     console.error('Database Error:', error);
     throw new Error('Failed to get user details.');
   }
-}
+});
 
 export async function addReview({
   data,

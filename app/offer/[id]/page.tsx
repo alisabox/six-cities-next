@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Loading from '@/app/loading';
 import Card from '@/components/card';
 import FavoriteButton from '@/components/favorite-button';
@@ -56,7 +57,7 @@ export default async function Offer({ params }: Props) {
               {
                 images.slice(0, MAX_NUMBER_OF_IMAGES).map((image) => (
                   <div key={image} className="property__image-wrapper">
-                    <img className="property__image" src={image} alt="Property" />
+                    <Image className="property__image" src={image} alt="Property" width={260} height={200} />
                   </div>
                 ))
               }
@@ -112,9 +113,9 @@ export default async function Offer({ params }: Props) {
                 <h2 className="property__host-title">Meet the host</h2>
                 <div className="property__host-user user">
                   <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
-                    <img
+                    <Image
                       className="property__avatar user__avatar"
-                      src={`../${avatarUrl}`}
+                      src={avatarUrl || ''}
                       width="74"
                       height="74"
                       alt="Host avatar"

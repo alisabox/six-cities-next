@@ -22,13 +22,14 @@ export default async function Offer({ params }: Props) {
   const offerId = parseInt(id, 10);
 
   const offer = await fetchOfferById(offerId);
-  const nearbyOffers = offer && await fetchNearbyOffers({ offerId: offer.id, city: offer.city.name });
 
   if (!offer) {
     return (
       <Loading />
     );
   }
+
+  const nearbyOffers = await fetchNearbyOffers({ offerId: offer.id, city: offer.city.name });
 
   const {
     images,

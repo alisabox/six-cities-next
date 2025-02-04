@@ -21,6 +21,6 @@ Promise<FormState<PostReviewType>> => {
     };
   } else {
     await addReview({ data, offerId, userId });
-    return { successMsg: 'Submitted the review successfully.' };
+    return { data };
   }
 };

@@ -65,7 +65,7 @@ export default function ReviewsList({ offerId }: ReviewsListProps) {
           })
         }
       </ul>
-      <ReviewForm offerId={offerId} updateReviews={updateReviews}/>
+      <ReviewForm offerId={offerId} updateReviewsAction={updateReviews}/>
     </section>
   );
 }

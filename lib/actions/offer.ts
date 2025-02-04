@@ -7,7 +7,7 @@ import { FormState } from '@/lib/types/login';
 import { convertZodErrors } from '@/lib/utils';
 
 export const favoriteStatusUpdateAction = async (data: FavoriteStatusUpdateType):
-Promise<FormState<OffersType>> => {
+Promise<FormState<OffersType | null>> => {
   const { success, error } = favoriteStatusUpdateSchema.safeParse(data);
 
   if (!success) {
@@ -17,6 +17,6 @@ Promise<FormState<OffersType>> => {
     };
   } else {
     const updatedOffer = await updateOfferFavoriteStatus({ isFavorite: data.isFavorite, offerId: data.offerId });
-    return { successMsg: 'Updated the offer status successfully.', data: updatedOffer };
+    return { data: updatedOffer };
   }
 };

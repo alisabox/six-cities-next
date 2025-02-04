@@ -15,10 +15,10 @@ const MAX_REVIEW_LENGTH = 300;
 
 type Props = {
   offerId: number;
-  updateReviews: () => void;
+  updateReviewsAction: () => void;
 };
 
-export default function ReviewForm({ offerId, updateReviews }: Props) {
+export default function ReviewForm({ offerId, updateReviewsAction }: Props) {
   const { userId } = useContext(AuthContext);
   const {
     register,
@@ -42,10 +42,10 @@ export default function ReviewForm({ offerId, updateReviews }: Props) {
 
   const onSubmit = async (data: PostReviewType) => {
     if (!userId) return;
-    const { successMsg } = await reviewSubmitAction({ data, userId, offerId });
-    if (successMsg) {
-      updateReviews();
-      toast.success(successMsg);
+    const { errors } = await reviewSubmitAction({ data, userId, offerId });
+    if (!errors) {
+      updateReviewsAction();
+      toast.success('Submitted the review successfully.');
       reset();
     }
   };

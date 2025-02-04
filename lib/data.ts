@@ -2,6 +2,7 @@
 
 import { cache } from 'react';
 import { neon } from '@neondatabase/serverless';
+import { toast } from 'react-toastify';
 import { verifySession } from '@/lib/auth';
 import { OffersType, PostReviewType, RawOfferData, RawReviewType, ReviewsType, UserType } from '@/lib/types/global';
 import { convertOfferData, convertOffersData, convertReviewsData } from '@/lib/utils';
@@ -60,12 +61,13 @@ export const fetchOffers = cache(async (): Promise<OffersType[]> => {
     `, [userId]) as RawOfferData[];
     return convertOffersData(data);
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch the offers.');
+    toast.error('Failed to fetch the offers. Please, refresh the page.');
+    console.log('fetchOffers', error);
+    return [];
   }
 });
 
-export const fetchOfferById = cache(async(offerId: number): Promise<OffersType> => {
+export const fetchOfferById = cache(async(offerId: number): Promise<OffersType | null> => {
   const { userId } = await verifySession();
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
@@ -120,8 +122,9 @@ export const fetchOfferById = cache(async(offerId: number): Promise<OffersType> 
     `, [userId]) as RawOfferData[];
     return convertOfferData(data[0]);
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error(`Failed to fetch the offer with id ${offerId}.`);
+    toast.error('Failed to fetch the offer. Please, refresh the page.');
+    console.log('fetchOfferById', error);
+    return null;
   }
 });
 
@@ -182,8 +185,9 @@ Promise<OffersType[]> => {
     `, [offerId, city, userId]) as RawOfferData[];
     return convertOffersData(data);
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch nearby offers.');
+    toast.error('Failed to fetch nearby offers.');
+    console.log('fetchNearbyOffers', error);
+    return [];
   }
 });
 
@@ -244,8 +248,9 @@ export const fetchFavoriteOffers = cache(async(): Promise<OffersType[]> => {
     `, [userId]) as RawOfferData[];
     return convertOffersData(data);
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch the offers.');
+    toast.error('Failed to fetch favorite offers.');
+    console.log('fetchFavoriteOffers', error);
+    return [];
   }
 });
 
@@ -274,8 +279,9 @@ export const fetchReviewsById = cache(async(offerId: number): Promise<ReviewsTyp
     `, [offerId]) as RawReviewType[];
     return convertReviewsData(data);
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to reviews.');
+    toast.error('Failed to fetch reviews.');
+    console.log('fetchReviewsById', error);
+    return [];
   }
 });
 
@@ -285,7 +291,7 @@ type UpdateOfferFavoriteStatus = {
 };
 
 export const updateOfferFavoriteStatus = cache(async({ isFavorite, offerId }: UpdateOfferFavoriteStatus):
-Promise<OffersType> => {
+Promise<OffersType | null> => {
   const { userId } = await verifySession();
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
@@ -302,12 +308,13 @@ Promise<OffersType> => {
     }
     return fetchOfferById(offerId);
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to update offer favorite status.');
+    toast.error('Failed to update offer favorite status.');
+    console.log('updateOfferFavoriteStatus', error);
+    return null;
   }
 });
 
-export const getUserByEmail = cache(async(email: string): Promise<UserType> => {
+export const getUserByEmail = cache(async(email: string): Promise<UserType | null> => {
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
     const user = await sql(`
@@ -317,12 +324,13 @@ export const getUserByEmail = cache(async(email: string): Promise<UserType> => {
     `, [email]) as UserType[];
     return user[0];
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to get user details.');
+    toast.error('Failed to get user details.');
+    console.log('getUserByEmail', error);
+    return null;
   }
 });
 
-export const getUserById = cache(async(userId: number): Promise<UserType> => {
+export const getUserById = cache(async(userId: number): Promise<UserType | null> => {
   const sql = neon(`${process.env.DATABASE_URL}`);
   try {
     const user = await sql(`
@@ -332,8 +340,9 @@ export const getUserById = cache(async(userId: number): Promise<UserType> => {
     `, [userId]) as UserType[];
     return user[0];
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to get user details.');
+    toast.error('Failed to get user details.');
+    console.log('getUserById', error);
+    return null;
   }
 });
 
@@ -353,7 +362,7 @@ export async function addReview({
         VALUES (NOW(), $1, $2, $3, $4);
     `, [data.comment, data.rating, offerId, userId]) as UserType[];
   } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to add review.');
+    toast.error('Failed to add review.');
+    console.log('addReview', error);
   }
 }

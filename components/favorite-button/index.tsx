@@ -2,6 +2,7 @@
 
 import React, { useContext } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 import { BookmarkIcon } from '@/components/icons/bookmark';
 import '@/public/css/main.css';
 import { favoriteStatusUpdateAction } from '@/lib/actions/offer';
@@ -23,9 +24,9 @@ export default function FavoriteButton({ isFavorite, offerId, className }: Props
     try {
       await favoriteStatusUpdateAction({ isFavorite: !isFavoriteState, offerId });
       router.refresh();
-    } catch (error) {
+    } catch (e) {
       setIsFavoriteState(isFavoriteState);
-      console.error(error);
+      toast.error(e instanceof Error ? e.message : 'Could update favorite status.');
     }
   };
 

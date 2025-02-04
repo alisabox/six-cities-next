@@ -1,5 +1,6 @@
 import { useEffect, useState, RefObject } from 'react';
 import { Map, TileLayer } from 'leaflet';
+import { toast } from 'react-toastify';
 import { CityType } from '@/lib/types/global';
 
 function useMap(
@@ -34,7 +35,7 @@ function useMap(
 
         setMap(instance);
       } catch (e) {
-        console.log(e);
+        toast.error(e instanceof Error ? e.message : 'Could not load the map.');
       }
     }
   }, [mapRef, map, city]);
